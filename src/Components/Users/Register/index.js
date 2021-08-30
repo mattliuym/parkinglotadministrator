@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, Input, Select, Button} from 'antd';
+import { message,Form, Input, Select, Button} from 'antd';
 import axios from 'axios';
 const { Option } = Select;
 
@@ -48,10 +48,12 @@ const Register= () => {
             "phone": values.phone
         }
         axios.post('/api/Administrator/SignUpAccount/',para).then(res=>{
-           if(res.status===true){
 
+           if(res.data.status){
+                message.success("You have registered successfully!");
+                setInterval('window.location.href="/login"',1000);
            }else{
-
+                message.error(res.data.result);
            }
         });
     };
