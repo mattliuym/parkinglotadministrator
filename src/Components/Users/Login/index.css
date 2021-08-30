@@ -1,5 +1,5 @@
 .login-box{
-    width:50%;
+    width:345px;
     height: 365px;
     padding: 24px;
     text-align: center;
@@ -14,13 +14,26 @@
     width: 100%;
     background-color: deepskyblue;
 }
-.link-box{
-    margin: 5% auto 0 auto;
-    text-align: right;
-    width: 95%;
-    height: 30px;
-    line-height: 30px;
-}
+/*.link-box{*/
+/*    margin: 5% auto 0 auto;*/
+/*    text-align: right;*/
+/*    width: 95%;*/
+/*    height: 30px;*/
+/*    line-height: 30px;*/
+/*}*/
 /*#basic_username{*/
 /*    width:30%;*/
 /*}*/
+
+.login-form {
+    max-width: 300px;
+}
+.login-form-forgot {
+    float: right;
+}
+.ant-col-rtl .login-form-forgot {
+    float: left;
+}
+.login-form-button {
+    width: 100%;
+}

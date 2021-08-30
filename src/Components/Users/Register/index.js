@@ -2,6 +2,7 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
 import { Form, Input, Select, Button} from 'antd';
+import axios from 'axios';
 const { Option } = Select;
 
 const formItemLayout = {
@@ -40,6 +41,19 @@ const Register= () => {
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+        let para = {
+            "userName": values.username,
+            "email": values.email,
+            "pwd": values.password,
+            "phone": values.phone
+        }
+        axios.post('/api/Administrator/SignUpAccount/',para).then(res=>{
+           if(res.status===true){
+
+           }else{
+
+           }
+        });
     };
 
     const prefixSelector = (
@@ -53,20 +67,7 @@ const Register= () => {
             </Select>
         </Form.Item>
     );
-    // const [autoCompleteResult, setAutoCompleteResult] = useState([]);
-    //
-    // const onWebsiteChange = (value) => {
-    //     if (!value) {
-    //         setAutoCompleteResult([]);
-    //     } else {
-    //         setAutoCompleteResult(['.com', '.org', '.net'].map((domain) => `${value}${domain}`));
-    //     }
-    // };
-    //
-    // const websiteOptions = autoCompleteResult.map((website) => ({
-    //     label: website,
-    //     value: website,
-    // }));
+
     return (
         <div className={"signup-box"}>
             <h2 className={"reg-header"}>Be an administrator</h2>
