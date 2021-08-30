@@ -1,0 +1,26 @@
+.login-box{
+    width:50%;
+    height: 365px;
+    padding: 24px;
+    text-align: center;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 7px;
+}
+.login-outer{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: deepskyblue;
+}
+.link-box{
+    margin: 5% auto 0 auto;
+    text-align: right;
+    width: 95%;
+    height: 30px;
+    line-height: 30px;
+}
+/*#basic_username{*/
+/*    width:30%;*/
+/*}*/
