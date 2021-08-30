@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import './Login.css';
+import './index.css';
 import { message,Form, Input, Button, Checkbox } from 'antd';
 import axios from "axios";
 
@@ -88,10 +88,14 @@ const Login = () => {
             userName:values.username,
             pwd:values.password
         }
-        axios.post('http://localhost:3001/api/Administrator/LoginAccount',params).then(res=>{
+        //verify account
+        axios.post('/api/Administrator/LoginAccount',params).then(res=>{
             if(res.data.status===true){
+                //if login successfully
                 document.cookie="token="+res.data.result.token;
+                window.location.href="/";
             }else{
+                //if unsuccessful
                 message.error({
                     content:res.data.result.message,
                     className:'error-message',
@@ -174,7 +178,7 @@ const Login = () => {
                     </Button>
                 </Form.Item>
             </Form>
-                <div className={"link-box"}><a>Don't have an account? Sign Up</a></div>
+                <div className={"link-box"}><a href={"/signup"}>Don't have an account? Sign Up</a></div>
         </div>
         </div>
     );

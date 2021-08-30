@@ -1,0 +1,26 @@
+.signup-outer{
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*height: 100%;*/
+    /*width: 100%;*/
+    /*background-color: deepskyblue;*/
+    padding-top: 3%;
+    height:100%;
+}
+.signup-box{
+    background-color: lightblue;
+    height:100%;
+    /*width:50%;*/
+    /*height: 365px;*/
+    /*padding: 24px;*/
+    /*text-align: center;*/
+    /*margin: 0 auto;*/
+    /*background-color: white;*/
+    /*border-radius: 7px;*/
+}
+.reg-header{
+    padding-top:2%;
+}
+.reg-button{
+    border-radius: 4px;
+}
