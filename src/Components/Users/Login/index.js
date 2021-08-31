@@ -16,7 +16,9 @@ const Login = () => {
         axios.post('/api/Administrator/LoginAccount',params).then(res=>{
             if(res.data.status===true){
                 //if login successfully
-                document.cookie="token="+res.data.result.token;
+                let expire = new Date((new Date()).getTime() +  24 * 3600 * 1000 * 7);
+                expire = ";expires=" + expire.toUTCString();
+                document.cookie="token="+res.data.result.token+expire;
                 window.location.href="/";
             }else{
                 //if unsuccessful
@@ -75,7 +77,6 @@ const Login = () => {
                         <Form.Item name="remember" valuePropName="checked" noStyle>
                             <Checkbox>Remember me</Checkbox>
                         </Form.Item>
-
                         <a className="login-form-forgot" href="/">
                             Forgot password
                         </a>
