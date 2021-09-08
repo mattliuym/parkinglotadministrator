@@ -2,6 +2,7 @@ import React from "react";
 import {Layout, Menu} from "antd";
 import './index.css';
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons";
+import {Link} from "react-router-dom";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -16,8 +17,8 @@ export default class Websidder extends React.Component{
                     style={{ height: '100%', borderRight: 0 }}
                 >
                     <SubMenu key="sub1" icon={<UserOutlined />} title="Manage Cars">
-                        <Menu.Item key="1">Current</Menu.Item>
-                        <Menu.Item key="2">History</Menu.Item>
+                        <Menu.Item key="1"><Link to="/home/current">Current</Link></Menu.Item>
+                        <Menu.Item key="2"><Link to="/home/history">History</Link></Menu.Item>
                         <Menu.Item key="3">Pay Monthly</Menu.Item>
                         <Menu.Item key="4">Make a payment</Menu.Item>
                     </SubMenu>

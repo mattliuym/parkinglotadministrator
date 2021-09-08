@@ -19,7 +19,7 @@ const Login = () => {
                 let expire = new Date((new Date()).getTime() +  24 * 3600 * 1000 * 7);
                 expire = ";expires=" + expire.toUTCString();
                 document.cookie="token="+res.data.result.token+expire;
-                window.location.href="/";
+                window.location.href="/home";
             }else{
                 //if unsuccessful
                 message.error({

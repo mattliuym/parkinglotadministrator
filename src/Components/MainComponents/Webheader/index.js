@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Menu,message} from "antd";
+import {Layout, Menu,message,Button} from "antd";
 import './index.css';
 import axios from 'axios';
 const { Header } = Layout;
@@ -28,12 +28,17 @@ export default class Webheader extends React.Component{
         else
             return null;
     }
-    delCookie(name){
+    delCookie=(name)=>{
         var exp = new Date();
         exp.setTime(exp.getTime() - 1);
         var cval=this.getCookie(name);
         if(cval!=null)
-            document.cookie= name + "="+cval+";expires="+exp.toUTCString();
+            // console.log(name+"="+cval+";expires="+exp.toUTCString())
+            document.cookie= name+"="+cval+";expires="+exp.toUTCString();
+    }
+    logOut=()=>{
+        this.delCookie("token");
+        window.location.href="/login";
     }
     render() {
         return(
@@ -45,6 +50,7 @@ export default class Webheader extends React.Component{
                     {/*<Menu.Item key="1">nav 1</Menu.Item>*/}
                     {/*<Menu.Item key="2">nav 2</Menu.Item>*/}
                     {/*<Menu.Item key="3">nav 3</Menu.Item>*/}
+                    <Menu.Item className={"logout-button"} key={"1"}><Button onClick={()=>this.logOut()}>Log Out</Button></Menu.Item>
                 </Menu>
             </Header>
         )
