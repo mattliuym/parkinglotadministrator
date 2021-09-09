@@ -1,8 +1,11 @@
 import React from "react";
 import 'antd/dist/antd.css';
 import './index.css';
-import {Layout, Table, Tag, Space, message, Popconfirm, Breadcrumb, Button} from 'antd';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Layout, Table, Tag, Space, message, Popconfirm, Breadcrumb, Button, Input, Spin} from 'antd';
+import {RedoOutlined} from '@ant-design/icons';
 import axios from "axios";
+import {Modal} from "react-bootstrap";
 const {Content } = Layout;
 export default class Current extends React.Component{
     state={
@@ -60,7 +63,7 @@ export default class Current extends React.Component{
                        }else{
                            return (
                                <Space size="middle">
-                                   <Popconfirm title={"Do you confirm to move it to history?"}><a>Move to History</a></Popconfirm>
+                                   <Popconfirm title={"Do you confirm to move it to history?"}><a>Release the Car</a></Popconfirm>
                                </Space>
                            )
                        }
@@ -69,16 +72,17 @@ export default class Current extends React.Component{
         ],
         data:[
         ],
-        show:false
+        show:false,
+        loading:true
     };
-
+    //reformat date function
     getDate=(time)=>{
         let myDate = new Date(time);
         let year = myDate.getFullYear();
-        let month = (myDate.getMonth()+1 < 10 ? '0'+(myDate.getMonth()+1) : myDate.getMonth()+1) ;//获取月
-        let date = myDate.getDate();
-        let  h = myDate.getHours();
-        let m = myDate.getMinutes();
+        let month = (myDate.getMonth()+1 < 10 ? '0'+(myDate.getMonth()+1) : myDate.getMonth()+1) ;
+        let date = (myDate.getDate()<10? '0'+myDate.getDate() : myDate.getDate());
+        let  h = (myDate.getHours()<10? '0'+myDate.getHours() : myDate.getHours());
+        let m = (myDate.getMinutes()<10? '0'+myDate.getMinutes():myDate.getMinutes());
         let now = `${date}-${month}-${year}   ${h}:${m}`;
         return now;
     }
@@ -86,17 +90,53 @@ export default class Current extends React.Component{
         console.log(e);
         message.success("Done!");
     }
-    componentDidMount() {
+    //upload plate
+    uploadPlate=()=>{
+        const {value} = this.plateNum.state;
+        axios.post('/api/SearchPlate/AddPlate',{plateNum:value.toUpperCase()}).then(res=>{
+            if(!res.data.status){
+                message.error(res.data.error);
+                setInterval('window.location.href="/login"',1000);
+            }
+            if(res.data.addSuccess){
+                message.success("Success!");
+                this.handleClose();
+                this.updateTable();
+            }else{
+                message.error(res.data.error);
+                this.handleClose();
+            }
+        });
+    }
+    //update table
+    updateTable=()=>{
+        this.setState({loading:true})
+        this.getTableData();
+        this.forceUpdate();
+    }
+    //show modal
+    show=()=>{
+        this.setState({show:true});
+    }
+    //close modal
+    handleClose=()=>{
+        this.setState({show:false});
+    }
+    //get table data
+    getTableData=()=>{
         axios.get("/api/SearchPlate/GetCurrentInfo").then(res=>{
             //console.log(res.data);
+            this.setState({loading:false});
             if(res.data.status){
                 this.state.data=this.setState({data:res.data.allPlate});
             }else{
                 message.error(res.data.error);
                 setInterval('window.location.href="/login"',1000);
             }
-
         });
+    }
+    componentDidMount() {
+       this.getTableData();
     }
 
     render() {
@@ -115,9 +155,33 @@ export default class Current extends React.Component{
                         minHeight: 280,
                     }}
                 >
-                    <Button type={"primary"} className={"add-car"} onClick={()=>{alert(1)}}>Add Car</Button>
-                    <Table rowKey={"enterId"} columns={this.state.columns} dataSource={this.state.data} />
+                    <div className={"button-set"}>
+                        <Button className={"add-car"} type={"primary"}  onClick={()=>this.show()}>Add Car</Button>
+                        <Button icon={<RedoOutlined />} onClick={()=>this.updateTable()}/>
+                    </div>
+                    <Spin spinning={this.state.loading}>
+                        <Table rowKey={"enterId"} columns={this.state.columns} dataSource={this.state.data} />
+                    </Spin>
                 </Content>
+                <Modal
+                    show={this.state.show}
+                    onHide={()=>this.handleClose()}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add Car Plate</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Input ref={c=>this.plateNum=c} placeholder={"Please input the plate here"} />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button type="secondary" onClick={()=>this.handleClose()}>
+                            Close
+                        </Button>
+                        <Button type="primary" onClick={()=>this.uploadPlate()}>Add</Button>
+                    </Modal.Footer>
+                </Modal>
             </Layout>
         )
     }
