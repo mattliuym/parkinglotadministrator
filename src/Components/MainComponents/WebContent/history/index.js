@@ -1,5 +1,5 @@
 import React from "react";
-import {Breadcrumb, Button, Input, Layout, message, Popconfirm, Space, Table} from "antd";
+import {Breadcrumb, Button, Input, Layout, message, Popconfirm, Space, Spin, Table} from "antd";
 import axios from "axios";
 import {SearchOutlined} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -18,8 +18,7 @@ export default class History extends React.Component{
         let date = (myDate.getDate()<10? '0'+myDate.getDate() : myDate.getDate());
         let  h = (myDate.getHours()<10? '0'+myDate.getHours() : myDate.getHours());
         let m = (myDate.getMinutes()<10? '0'+myDate.getMinutes():myDate.getMinutes());
-        let now = `${date}-${month}-${year}   ${h}:${m}`;
-        return now;
+        return `${date}-${month}-${year}   ${h}:${m}`;
     }
     getHistoryData=()=>{
         axios.get('/api/SearchPlate/GetHistoryInfo').then(res=>{
@@ -31,6 +30,12 @@ export default class History extends React.Component{
                 setInterval('window.location.href="/login"',1000);
             }
         });
+    }
+    //refresh the table
+    updateTable=()=>{
+        this.setState({loading:true})
+        this.getHistoryData();
+        this.forceUpdate();
     }
     //Search
     getColumnSearchProps = (dataIndex) => ({
@@ -142,7 +147,7 @@ export default class History extends React.Component{
                 key: 'action',
                 render: (text, record) =>
                     <Space size="middle">
-                        <Button type={"primary"}>Delete Record</Button>
+                        <Popconfirm onConfirm={()=>this.updateTable()} title={"Do you confirm to do so?"}><Button type={"primary"}>Delete Record</Button></Popconfirm>
                     </Space>
             }
         ];
@@ -161,7 +166,9 @@ export default class History extends React.Component{
                         minHeight: 280,
                     }}
                 >
-                    <Table rowKey={"enterId"} columns={columns} dataSource={this.state.data} />
+                    <Spin spinning={this.state.loading}>
+                        <Table rowKey={"enterId"} columns={columns} dataSource={this.state.data} />
+                    </Spin>
                 </Content>
             </Layout>
         )

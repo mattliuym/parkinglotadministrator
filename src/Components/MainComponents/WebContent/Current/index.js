@@ -27,8 +27,7 @@ export default class Current extends React.Component{
         let date = (myDate.getDate()<10? '0'+myDate.getDate() : myDate.getDate());
         let  h = (myDate.getHours()<10? '0'+myDate.getHours() : myDate.getHours());
         let m = (myDate.getMinutes()<10? '0'+myDate.getMinutes():myDate.getMinutes());
-        let now = `${date}-${month}-${year}   ${h}:${m}`;
-        return now;
+        return `${date}-${month}-${year}   ${h}:${m}`;
     }
     //
     confirm = (e)=>{
