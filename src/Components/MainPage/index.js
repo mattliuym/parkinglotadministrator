@@ -1,5 +1,5 @@
 import React from "react";
-import {Breadcrumb, Layout} from "antd";
+import {Layout} from "antd";
 import Webheader from "../MainComponents/Webheader";
 import Websidder from "../MainComponents/Websidder";
 import Current from "../MainComponents/WebContent/Current";
@@ -7,7 +7,7 @@ import History from "../MainComponents/WebContent/history";
 import './index.css';
 import 'antd/dist/antd.css';
 import {Switch, Route, Redirect} from "react-router-dom";
-const {Content } = Layout;
+
 
 export default class MainPage extends React.Component{
     render() {

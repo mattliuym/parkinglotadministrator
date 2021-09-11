@@ -43,7 +43,8 @@
     ]
   },
   "devDependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "react-highlight-words": "^0.17.0"
   },
   "proxy": "https://localhost:5001"
 }
