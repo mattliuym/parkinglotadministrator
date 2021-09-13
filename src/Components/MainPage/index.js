@@ -7,6 +7,8 @@ import History from "../MainComponents/WebContent/history";
 import './index.css';
 import 'antd/dist/antd.css';
 import {Switch, Route, Redirect} from "react-router-dom";
+import Lease from "../MainComponents/WebContent/Lease";
+import Pricing from "../MainComponents/WebContent/Pricing";
 
 
 export default class MainPage extends React.Component{
@@ -33,6 +35,8 @@ export default class MainPage extends React.Component{
                         <Switch>
                             <Route path={'/home/current'} component={Current} />
                             <Route path={'/home/history'} component={History} />
+                            <Route path={'/home/lease'} component={Lease}/>
+                            <Route path={'/home/pricing'} component={Pricing}/>
                             <Redirect to={'/home/current'} />
                         </Switch>
                             {/*</Content>*/}

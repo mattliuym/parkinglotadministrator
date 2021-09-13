@@ -46,6 +46,9 @@ export default class Webheader extends React.Component{
                 <div className="logo user-info">
                     <span>{this.state.userName}</span>
                 </div>
+                <div>
+                    <span><div className={"project-title"}>Car Park Management System</div></span>
+                </div>
                 <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
                     {/*<Menu.Item key="1">nav 1</Menu.Item>*/}
                     {/*<Menu.Item key="2">nav 2</Menu.Item>*/}

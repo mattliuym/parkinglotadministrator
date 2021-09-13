@@ -9,6 +9,8 @@ export default class History extends React.Component{
     state={
         data:[],
         loading:true,
+        searchText: '',
+        searchedColumn: '',
     }
     //reformat date function
     getDate=(time)=>{
