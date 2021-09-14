@@ -1,9 +1,24 @@
 import React from "react";
-import {Breadcrumb, Button, Input, Layout, message, Popconfirm, Space, Spin, Table, Tag} from "antd";
+import {
+    Breadcrumb,
+    Button,
+    Input,
+    Layout,
+    message,
+    Popconfirm,
+    Space,
+    Spin,
+    Switch,
+    Table,
+    Tag,
+    TimePicker
+} from "antd";
 import axios from "axios";
 import {RedoOutlined, SearchOutlined} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import {Modal} from "react-bootstrap";
+import moment from "moment";
+import './index.css';
 const {Content } = Layout;
 
 export default class Pricing extends React.Component{
@@ -13,6 +28,9 @@ export default class Pricing extends React.Component{
         show:false,
         searchText: '',
         searchedColumn: '',
+        modalTitle:'',
+        timerange:'',
+        isTwentyfour:false
     }
     //get pricing info from db
     getPricing=()=>{
@@ -114,6 +132,17 @@ export default class Pricing extends React.Component{
     show=(c)=>{
         this.setState({show:true});
         console.log(c);
+        if(c===1){
+            this.setState({modalTitle:'Make a pricing'});
+            let time = null
+            this.setState({time});
+        }else{
+            this.setState({modalTitle:'Edit this pricing'});
+            let time=[moment(c.openTime, 'HH:mm:ss'),moment(c.closeTime, 'HH:mm:ss')];
+            let isTwentyfour=c.isTwentyfour;
+
+            this.setState({time,isTwentyfour});
+        }
     }
     //close modal
     handleClose=()=>{
@@ -251,6 +280,7 @@ export default class Pricing extends React.Component{
                 },
             },
         ];
+        console.log(this.state.para)
         return (
             <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
@@ -281,10 +311,20 @@ export default class Pricing extends React.Component{
                     keyboard={false}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Add Car Plate</Modal.Title>
+                        <Modal.Title>{this.state.modalTitle}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        body content here
+                        <div>
+                            <TimePicker.RangePicker popupClassName={"popup-picker"} defaultValue={this.state.time}  disabledSeconds={(selectedHour, selectedMinute)=>{
+                            let disabled = [];
+                            for (let i = 0; i < 60; i++) {
+                                disabled.push(i);
+                            }
+                            return disabled;
+                        }} hideDisabledOptions={true} disabled={this.state.isTwentyfour} />
+                            <Switch className={'switch1'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isTwentyfour} onChange={(checked)=>{this.setState({isTwentyfour:checked})}} />
+                            <span>24/7</span>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="secondary" onClick={()=>this.handleClose()}>
