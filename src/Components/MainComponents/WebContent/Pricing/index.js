@@ -34,7 +34,7 @@ export default class Pricing extends React.Component{
         openTime:'',
         closeTime:'',
         timerange:'',
-        isTwentyfour:false,
+        isTwentyFour:false,
         pricePh:NaN,
         isFlatRate:false,
         earlyBirdPrice:NaN,
@@ -150,7 +150,7 @@ export default class Pricing extends React.Component{
                 openTime:'',
                 closeTime:'',
                 timerange:'',
-                isTwentyfour:false,
+                isTwentyFour:false,
                 pricePh:NaN,
                 isFlatRate:false,
                 earlyBirdPrice:NaN,
@@ -163,8 +163,8 @@ export default class Pricing extends React.Component{
         }else{
             this.setState({modalTitle:'Edit this pricing'});
             let timerange=[moment(c.openTime, 'HH:mm:ss'),moment(c.closeTime, 'HH:mm:ss')];
-            let isTwentyfour = c.isTwentyfour;
-            this.setState({timerange,isTwentyfour});
+            let isTwentyFour = c.isTwentyFour;
+            this.setState({isTwentyFour});
             if(c.haveEarlyBird){
                 this.setState({earlyBirdPrice:c.earlyBirdPrice});
             }
@@ -174,10 +174,10 @@ export default class Pricing extends React.Component{
             if(c.monthlyFees){
                 this.setState({monthlyFees:c.monthlyFees});
             }
-            if(!c.isTwentyfour){
+            if(!c.isTwentyFour){
                this.setState({
                    openTime:c.openTime,
-                   closeTime:c.closeTime,});
+                   closeTime:c.closeTime,timerange});
             }
 
             this.setState({
@@ -188,8 +188,6 @@ export default class Pricing extends React.Component{
                 pricePh:c.pricePh,
             });
         }
-        console.log("3#######3")
-        console.log(this.state.isTwentyfour);
     }
     //close modal
     handleClose=()=>{
@@ -198,7 +196,7 @@ export default class Pricing extends React.Component{
     //submit the pricing scheme
     submitForm=()=>{
         let para = {
-            isTwentyFour:this.state.isTwentyfour,
+            isTwentyFour:this.state.isTwentyFour,
             isFlatRate:this.state.isFlatRate,
             pricePh:this.state.pricePh,
             haveEarlyBird: this.state.haveEarlyBird,
@@ -206,15 +204,31 @@ export default class Pricing extends React.Component{
             isMonthly:this.state.isMonthly,
         }
         if(this.state.haveEarlyBird){
+            if(this.state.earlyBirdPrice==null){
+                alert("Early Bird Price should not be empty!");
+                return;
+            }
             para.earlyBirdPrice=this.state.earlyBirdPrice
         }
         if(this.state.haveMax){
+            if(this.state.haveMax==null){
+                alert("Max price should not be empty!");
+                return;
+            }
             para.maxPrice=this.state.maxPrice
         }
         if(this.state.isMonthly){
+            if(this.state.monthlyFees){
+                alert("Monthly Price should not be empty");
+                return;
+            }
             para.monthlyFees=this.state.monthlyFees
         }
-        if(!this.state.isTwentyfour){
+        if(!this.state.isTwentyFour){
+            if(this.state.openTime==""){
+                alert("Please fill the opening hour!");
+                return;
+            }
             para.openTime=this.state.openTime;
             para.closeTime=this.state.closeTime;
         }
@@ -395,8 +409,8 @@ export default class Pricing extends React.Component{
                                 disabled.push(i);
                             }
                             return disabled;
-                        }} hideDisabledOptions={true} disabled={this.state.isTwentyfour} onChange={(a,b)=>{this.setState({openTime:b[0],closeTime:b[1]})}} />
-                            <Switch className={'switch1'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isTwentyfour} onChange={(checked)=>{this.setState({isTwentyfour:checked})}} />
+                        }} hideDisabledOptions={true} disabled={this.state.isTwentyFour} onChange={(a,b)=>{this.setState({openTime:b[0],closeTime:b[1]})}} />
+                            <Switch className={'switch1'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isTwentyFour} onChange={(checked)=>{this.setState({isTwentyFour:checked})}} />
                             <span>24/7 Operation</span>
                         </div>
                         <div className={"modal-rows"}>
