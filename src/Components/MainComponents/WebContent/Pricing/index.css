@@ -2,7 +2,7 @@
     z-index:1056;
 }
 .switch1{
-    margin-left: 20px;
+    margin-left: 24px;
     margin-right: 10px;
 }
 .switch2{
@@ -25,9 +25,12 @@
 .title4{
     margin-right: 55px;
 }
+.title5{
+    margin-right: 23px;
+}
 #phour{
     display: inline-block;
-    width: 70px;
+    width: 75px;
     margin-left: 10px;
     margin-right: 10px;
 }

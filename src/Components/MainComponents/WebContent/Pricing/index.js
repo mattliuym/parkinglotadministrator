@@ -28,16 +28,21 @@ export default class Pricing extends React.Component{
         show:false,
         searchText: '',
         searchedColumn: '',
+        //
         modalTitle:'',
+        pricingName:'',
+        openTime:'',
+        closeTime:'',
         timerange:'',
         isTwentyfour:false,
-        pricePh:0,
+        pricePh:NaN,
         isFlatRate:false,
-        earlyBirdPrice:0,
+        earlyBirdPrice:NaN,
         haveEarlyBird:false,
-        maxPrice:0,
-        haveMax:false
-
+        maxPrice:NaN,
+        haveMax:false,
+        isMonthly:false,
+        monthlyFees:NaN
     }
     //get pricing info from db
     getPricing=()=>{
@@ -138,21 +143,83 @@ export default class Pricing extends React.Component{
     //show modal
     show=(c)=>{
         this.setState({show:true});
-        console.log(c);
         if(c===1){
             this.setState({modalTitle:'Make a pricing'});
-            let time = null
-            this.setState({time});
+            this.setState({
+                pricingName:'',
+                openTime:'',
+                closeTime:'',
+                timerange:'',
+                isTwentyfour:false,
+                pricePh:NaN,
+                isFlatRate:false,
+                earlyBirdPrice:NaN,
+                haveEarlyBird:false,
+                maxPrice:NaN,
+                haveMax:false,
+                isMonthly:false,
+                monthlyFees:NaN
+            })
         }else{
             this.setState({modalTitle:'Edit this pricing'});
-            let time=[moment(c.openTime, 'HH:mm:ss'),moment(c.closeTime, 'HH:mm:ss')];
-            let isTwentyfour=c.isTwentyfour;
-            this.setState({time,isTwentyfour});
+            let timerange=[moment(c.openTime, 'HH:mm:ss'),moment(c.closeTime, 'HH:mm:ss')];
+            let isTwentyfour = c.isTwentyfour;
+            this.setState({timerange,isTwentyfour});
+            if(c.haveEarlyBird){
+                this.setState({earlyBirdPrice:c.earlyBirdPrice});
+            }
+            if(c.haveMax){
+                this.setState({maxPrice:c.maxPrice});
+            }
+            if(c.monthlyFees){
+                this.setState({monthlyFees:c.monthlyFees});
+            }
+            if(!c.isTwentyfour){
+               this.setState({
+                   openTime:c.openTime,
+                   closeTime:c.closeTime,});
+            }
+
+            this.setState({
+                haveMax:c.haveMax,
+                haveEarlyBird:c.haveEarlyBird,
+                isMonthly:c.isMonthly,
+                isFlatRate:c.isFlatRate,
+                pricePh:c.pricePh,
+            });
         }
+        console.log("3#######3")
+        console.log(this.state.isTwentyfour);
     }
     //close modal
     handleClose=()=>{
         this.setState({show:false});
+    }
+    //submit the pricing scheme
+    submitForm=()=>{
+        let para = {
+            isTwentyFour:this.state.isTwentyfour,
+            isFlatRate:this.state.isFlatRate,
+            pricePh:this.state.pricePh,
+            haveEarlyBird: this.state.haveEarlyBird,
+            haveMax: this.state.haveMax,
+            isMonthly:this.state.isMonthly,
+        }
+        if(this.state.haveEarlyBird){
+            para.earlyBirdPrice=this.state.earlyBirdPrice
+        }
+        if(this.state.haveMax){
+            para.maxPrice=this.state.maxPrice
+        }
+        if(this.state.isMonthly){
+            para.monthlyFees=this.state.monthlyFees
+        }
+        if(!this.state.isTwentyfour){
+            para.openTime=this.state.openTime;
+            para.closeTime=this.state.closeTime;
+        }
+        console.log(para);
+        //this.handleClose();
     }
     componentDidMount() {
         this.getPricing();
@@ -286,7 +353,6 @@ export default class Pricing extends React.Component{
                 },
             },
         ];
-
         return (
             <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
@@ -323,22 +389,24 @@ export default class Pricing extends React.Component{
                     <Modal.Body>
                         <div className={"modal-rows"}>
                             <span className={'title1'}>Opening Hours:</span>
-                            <TimePicker.RangePicker popupClassName={"popup-picker"} defaultValue={this.state.time}  disabledSeconds={(selectedHour, selectedMinute)=>{
+                            <TimePicker.RangePicker popupClassName={"popup-picker"} defaultValue={this.state.timerange}  disabledSeconds={(selectedHour, selectedMinute)=>{
                             let disabled = [];
                             for (let i = 0; i < 60; i++) {
                                 disabled.push(i);
                             }
                             return disabled;
-                        }} hideDisabledOptions={true} disabled={this.state.isTwentyfour} />
+                        }} hideDisabledOptions={true} disabled={this.state.isTwentyfour} onChange={(a,b)=>{this.setState({openTime:b[0],closeTime:b[1]})}} />
                             <Switch className={'switch1'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isTwentyfour} onChange={(checked)=>{this.setState({isTwentyfour:checked})}} />
                             <span>24/7 Operation</span>
                         </div>
                         <div className={"modal-rows"}>
                             <span className={"title2"}>Price: </span>
                             <InputNumber
+                                defaultValue={this.state.pricePh}
                                 min={0}
                                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                onChange={value=>{this.setState({pricePh:value})}}
                             />
                             <span id={'phour'}>{this.state.isFlatRate ? "":"per hour"}</span>
                             <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isFlatRate} onChange={(checked => {this.setState({isFlatRate:checked})})} />
@@ -347,10 +415,12 @@ export default class Pricing extends React.Component{
                         <div className={"modal-rows"}>
                             <span className={"title3"}>Maximum Price: </span>
                             <InputNumber
+                                defaultValue={this.state.maxPrice}
                                 disabled={!this.state.haveMax}
                                 min={0}
                                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                onChange={value=>{this.setState({maxPrice:value})}}
                             />
                             <span id={'phour'}>{this.state.haveMax ? "Max":""}</span>
                             <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.haveMax} onChange={(checked => {this.setState({haveMax:checked})})} />
@@ -359,22 +429,37 @@ export default class Pricing extends React.Component{
                         <div className={"modal-rows"}>
                             <span className={"title4"}>Early Bird: </span>
                             <InputNumber
+                                defaultValue={this.state.earlyBirdPrice}
                                 disabled={!this.state.haveEarlyBird}
                                 min={0}
                                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                onChange={value=>{this.setState({earlyBirdPrice:value})}}
                             />
                             <span id={'phour'}>{this.state.haveEarlyBird ? "Total":""}</span>
                             <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.haveEarlyBird} onChange={(checked => {this.setState({haveEarlyBird:checked})})} />
                             <span>Applicable</span>
                         </div>
-
+                        <div className={"modal-rows"}>
+                            <span className={"title5"}>Monthly Price: </span>
+                            <InputNumber
+                                defaultValue={this.state.monthlyFees}
+                                disabled={!this.state.isMonthly}
+                                min={0}
+                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                onChange={value=>{this.setState({monthlyFees:value})}}
+                            />
+                            <span id={'phour'}>per month</span>
+                            <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isMonthly} onChange={(checked => {this.setState({isMonthly:checked})})} />
+                            <span>Pay Monthly</span>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="secondary" onClick={()=>this.handleClose()}>
                             Close
                         </Button>
-                        <Button type="primary" onClick={()=>this.handleClose()}>Add</Button>
+                        <Button type="primary" onClick={()=>this.submitForm()}>Add</Button>
                     </Modal.Footer>
                 </Modal>
             </Layout>
