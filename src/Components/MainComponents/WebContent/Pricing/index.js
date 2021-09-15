@@ -2,7 +2,7 @@ import React from "react";
 import {
     Breadcrumb,
     Button,
-    Input,
+    Input, InputNumber,
     Layout,
     message,
     Popconfirm,
@@ -30,7 +30,14 @@ export default class Pricing extends React.Component{
         searchedColumn: '',
         modalTitle:'',
         timerange:'',
-        isTwentyfour:false
+        isTwentyfour:false,
+        pricePh:0,
+        isFlatRate:false,
+        earlyBirdPrice:0,
+        haveEarlyBird:false,
+        maxPrice:0,
+        haveMax:false
+
     }
     //get pricing info from db
     getPricing=()=>{
@@ -140,7 +147,6 @@ export default class Pricing extends React.Component{
             this.setState({modalTitle:'Edit this pricing'});
             let time=[moment(c.openTime, 'HH:mm:ss'),moment(c.closeTime, 'HH:mm:ss')];
             let isTwentyfour=c.isTwentyfour;
-
             this.setState({time,isTwentyfour});
         }
     }
@@ -280,7 +286,7 @@ export default class Pricing extends React.Component{
                 },
             },
         ];
-        console.log(this.state.para)
+
         return (
             <Layout style={{ padding: '0 24px 24px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
@@ -309,12 +315,14 @@ export default class Pricing extends React.Component{
                     onHide={()=>this.handleClose()}
                     backdrop="static"
                     keyboard={false}
+                    size={'lg'}
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>{this.state.modalTitle}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div>
+                        <div className={"modal-rows"}>
+                            <span className={'title1'}>Opening Hours:</span>
                             <TimePicker.RangePicker popupClassName={"popup-picker"} defaultValue={this.state.time}  disabledSeconds={(selectedHour, selectedMinute)=>{
                             let disabled = [];
                             for (let i = 0; i < 60; i++) {
@@ -323,8 +331,44 @@ export default class Pricing extends React.Component{
                             return disabled;
                         }} hideDisabledOptions={true} disabled={this.state.isTwentyfour} />
                             <Switch className={'switch1'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isTwentyfour} onChange={(checked)=>{this.setState({isTwentyfour:checked})}} />
-                            <span>24/7</span>
+                            <span>24/7 Operation</span>
                         </div>
+                        <div className={"modal-rows"}>
+                            <span className={"title2"}>Price: </span>
+                            <InputNumber
+                                min={0}
+                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                            />
+                            <span id={'phour'}>{this.state.isFlatRate ? "":"per hour"}</span>
+                            <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isFlatRate} onChange={(checked => {this.setState({isFlatRate:checked})})} />
+                            <span>Flat Rate</span>
+                        </div>
+                        <div className={"modal-rows"}>
+                            <span className={"title3"}>Maximum Price: </span>
+                            <InputNumber
+                                disabled={!this.state.haveMax}
+                                min={0}
+                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                            />
+                            <span id={'phour'}>{this.state.haveMax ? "Max":""}</span>
+                            <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.haveMax} onChange={(checked => {this.setState({haveMax:checked})})} />
+                            <span>Applicable</span>
+                        </div>
+                        <div className={"modal-rows"}>
+                            <span className={"title4"}>Early Bird: </span>
+                            <InputNumber
+                                disabled={!this.state.haveEarlyBird}
+                                min={0}
+                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                            />
+                            <span id={'phour'}>{this.state.haveEarlyBird ? "Total":""}</span>
+                            <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.haveEarlyBird} onChange={(checked => {this.setState({haveEarlyBird:checked})})} />
+                            <span>Applicable</span>
+                        </div>
+
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="secondary" onClick={()=>this.handleClose()}>

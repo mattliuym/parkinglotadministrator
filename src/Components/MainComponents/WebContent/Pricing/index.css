@@ -2,6 +2,32 @@
     z-index:1056;
 }
 .switch1{
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 20px;
+    margin-right: 10px;
+}
+.switch2{
+    margin-left: 69px;
+    margin-right: 10px;
+}
+.modal-rows{
+    margin-left: 60px;
+    margin-bottom:15px;
+}
+.title1{
+    margin-right: 20px;
+}
+.title2{
+    margin-right: 87px;
+}
+.title3{
+    margin-right: 12px;
+}
+.title4{
+    margin-right: 55px;
+}
+#phour{
+    display: inline-block;
+    width: 70px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
