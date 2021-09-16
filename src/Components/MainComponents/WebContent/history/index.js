@@ -154,7 +154,7 @@ export default class History extends React.Component{
             }
         ];
         return (
-            <Layout style={{ padding: '0 24px 24px' }}>
+            <Layout style={{ padding: '0 24px 0px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
                     <Breadcrumb.Item>Manage Cars</Breadcrumb.Item>

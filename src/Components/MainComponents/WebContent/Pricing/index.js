@@ -1,7 +1,7 @@
 import React from "react";
 import {
     Breadcrumb,
-    Button,
+    Button, Checkbox,
     Input, InputNumber,
     Layout,
     message,
@@ -29,8 +29,10 @@ export default class Pricing extends React.Component{
         searchText: '',
         searchedColumn: '',
         //
+        pricingId:NaN,
         modalTitle:'',
         pricingName:'',
+        TotalPark:NaN,
         openTime:'',
         closeTime:'',
         timerange:'',
@@ -42,7 +44,9 @@ export default class Pricing extends React.Component{
         maxPrice:NaN,
         haveMax:false,
         isMonthly:false,
-        monthlyFees:NaN
+        monthlyFees:NaN,
+        freeBefore:NaN,
+        inUse:false
     }
     //get pricing info from db
     getPricing=()=>{
@@ -146,7 +150,9 @@ export default class Pricing extends React.Component{
         if(c===1){
             this.setState({modalTitle:'Make a pricing'});
             this.setState({
+                pricingId:NaN,
                 pricingName:'',
+                totalPark:NaN,
                 openTime:'',
                 closeTime:'',
                 timerange:'',
@@ -158,7 +164,9 @@ export default class Pricing extends React.Component{
                 maxPrice:NaN,
                 haveMax:false,
                 isMonthly:false,
-                monthlyFees:NaN
+                monthlyFees:NaN,
+                freeBefore:NaN,
+                inUse:false
             })
         }else{
             this.setState({modalTitle:'Edit this pricing'});
@@ -181,11 +189,16 @@ export default class Pricing extends React.Component{
             }
 
             this.setState({
+                pricingId:c.pricingId,
+                pricingName:c.pricingName,
+                totalPark:c.totalPark,
                 haveMax:c.haveMax,
                 haveEarlyBird:c.haveEarlyBird,
                 isMonthly:c.isMonthly,
                 isFlatRate:c.isFlatRate,
                 pricePh:c.pricePh,
+                freeBefore:c.freeBefore,
+                inUse:c.inUse
             });
         }
     }
@@ -196,12 +209,18 @@ export default class Pricing extends React.Component{
     //submit the pricing scheme
     submitForm=()=>{
         let para = {
+            pricingId:this.state.pricingId,
+            pricingName:this.state.pricingName,
+            totalPark:this.state.totalPark,
             isTwentyFour:this.state.isTwentyFour,
             isFlatRate:this.state.isFlatRate,
             pricePh:this.state.pricePh,
             haveEarlyBird: this.state.haveEarlyBird,
             haveMax: this.state.haveMax,
             isMonthly:this.state.isMonthly,
+            monthlyFees:this.state.monthlyFees,
+            freeBefore: this.state.freeBefore,
+            inUse:this.state.inUse
         }
         if(this.state.haveEarlyBird){
             if(this.state.earlyBirdPrice==null){
@@ -211,14 +230,14 @@ export default class Pricing extends React.Component{
             para.earlyBirdPrice=this.state.earlyBirdPrice
         }
         if(this.state.haveMax){
-            if(this.state.haveMax==null){
+            if(this.state.monthlyFees==null){
                 alert("Max price should not be empty!");
                 return;
             }
             para.maxPrice=this.state.maxPrice
         }
         if(this.state.isMonthly){
-            if(this.state.monthlyFees){
+            if(this.state.monthlyFees==null){
                 alert("Monthly Price should not be empty");
                 return;
             }
@@ -232,8 +251,21 @@ export default class Pricing extends React.Component{
             para.openTime=this.state.openTime;
             para.closeTime=this.state.closeTime;
         }
-        console.log(para);
-        //this.handleClose();
+        axios.post('/api/Pricing/UpdatePricing',para).then(res=>{
+            if(res.data.status){
+                if(res.data.public){
+                    this.handleClose();
+                    message.success("Done!");
+                    this.updateTable();
+                }else{
+                    message.error(res.data.error);
+                    return;
+                }
+            }else{
+                message.error(res.data.error);
+                setInterval('window.location.href="/login"',1000);
+            }
+        });
     }
     componentDidMount() {
         this.getPricing();
@@ -248,6 +280,12 @@ export default class Pricing extends React.Component{
                 render: text => <a>{text}</a>,
                 ...this.getColumnSearchProps('pricingName'),
             },{
+                title: 'Spaces',
+                dataIndex: 'totalPark',
+                key: 'totalPark',
+                render: totalPark=><span>{totalPark}</span>
+            }
+            ,{
                 title: 'Open Time',
                 dataIndex: 'openTime',
                 key: 'openTime',
@@ -368,7 +406,7 @@ export default class Pricing extends React.Component{
             },
         ];
         return (
-            <Layout style={{ padding: '0 24px 24px' }}>
+            <Layout style={{ padding: '0 24px 0px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
                     <Breadcrumb.Item>Pricing</Breadcrumb.Item>
@@ -401,6 +439,14 @@ export default class Pricing extends React.Component{
                         <Modal.Title>{this.state.modalTitle}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <div className={"modal-rows"}>
+                            <span className={'title2'}>Name:</span>
+                            <Input style={{width:'228px'}} defaultValue={this.state.pricingName} onChange={e=>{this.setState({pricingName:e.target.value})}}></Input>
+                        </div>
+                        <div className={"modal-rows"}>
+                            <span className={'title0'}>Available Spaces:</span>
+                            <InputNumber min={1} style={{width:'228px'}} defaultValue={this.state.totalPark} onChange={value=>{this.setState({totalPark:value})}}></InputNumber>
+                        </div>
                         <div className={"modal-rows"}>
                             <span className={'title1'}>Opening Hours:</span>
                             <TimePicker.RangePicker popupClassName={"popup-picker"} defaultValue={this.state.timerange}  disabledSeconds={(selectedHour, selectedMinute)=>{
@@ -467,6 +513,20 @@ export default class Pricing extends React.Component{
                             <span id={'phour'}>per month</span>
                             <Switch className={'switch2'} checkedChildren="Yes" unCheckedChildren="No" defaultChecked={this.state.isMonthly} onChange={(checked => {this.setState({isMonthly:checked})})} />
                             <span>Pay Monthly</span>
+                        </div>
+                        <div className={"modal-rows"}>
+                            <span className={"title6"}>Free Parking: </span>
+                            <InputNumber
+                                defaultValue={this.state.freeBefore}
+                                min={0}
+                                formatter={value => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                onChange={value=>{this.setState({freeBefore:value})}}
+                            />
+                            <span id={'phour'}>minutes</span>
+                        </div>
+                        <div className={"modal-rows"}>
+                            <Checkbox defaultChecked={this.state.inUse} onChange={(e)=>{this.setState({inUse:e.target.checked});}}>Enable this scheme</Checkbox>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

@@ -2,6 +2,7 @@ import React from "react";
 import {Layout} from "antd";
 import Webheader from "../MainComponents/Webheader";
 import Websidder from "../MainComponents/Websidder";
+import Webfooter from "../MainComponents/Webfooter";
 import Current from "../MainComponents/WebContent/Current";
 import History from "../MainComponents/WebContent/history";
 import './index.css';
@@ -9,6 +10,7 @@ import 'antd/dist/antd.css';
 import {Switch, Route, Redirect} from "react-router-dom";
 import Lease from "../MainComponents/WebContent/Lease";
 import Pricing from "../MainComponents/WebContent/Pricing";
+
 
 
 export default class MainPage extends React.Component{
@@ -42,6 +44,7 @@ export default class MainPage extends React.Component{
                             {/*</Content>*/}
                         {/*</Layout>*/}
                     </Layout>
+                    <Webfooter/>
                 </Layout>
         );
     }

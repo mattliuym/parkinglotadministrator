@@ -22,12 +22,9 @@ export default class Websidder extends React.Component{
                         <Menu.Item key="3"><Link to="/home/lease">Pay Monthly</Link></Menu.Item>
                         <Menu.Item key="4">Make a payment</Menu.Item>
                     </SubMenu>
-                    <SubMenu key="sub2" icon={<LaptopOutlined />} title="Pricing">
-                        <Menu.Item key="5"><Link to="/home/pricing">View Plans</Link></Menu.Item>
-                        <Menu.Item key="6">Make New Plan</Menu.Item>
-                        {/*<Menu.Item key="7">option7</Menu.Item>*/}
-                        {/*<Menu.Item key="8">option8</Menu.Item>*/}
-                    </SubMenu>
+                    <Menu.Item key="sub2" icon={<LaptopOutlined />} >
+                        <Link to="/home/pricing">Pricing</Link>
+                    </Menu.Item>
                     <SubMenu key="sub3" icon={<NotificationOutlined />} title="Settings">
                         <Menu.Item key="9">My Details</Menu.Item>
                         <Menu.Item key="10">Parking Lot Details</Menu.Item>

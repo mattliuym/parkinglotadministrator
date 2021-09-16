@@ -7,7 +7,7 @@ export default class Lease extends React.Component{
 
     render() {
         return (
-            <Layout style={{ padding: '0 24px 24px' }}>
+            <Layout style={{ padding: '0 24px 0px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                     <Breadcrumb.Item>Home</Breadcrumb.Item>
                     <Breadcrumb.Item>Manage Cars</Breadcrumb.Item>
