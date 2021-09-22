@@ -35,7 +35,7 @@ export default class History extends React.Component{
     }
     //refresh the table
     updateTable=()=>{
-        this.setState({loading:true})
+        this.setState({loading:true});
         this.getHistoryData();
         this.forceUpdate();
     }
