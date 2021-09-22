@@ -17,6 +17,8 @@ export default class Lease extends React.Component{
         searchText:'',
         searchedColumn:'',
         modalTitle: '',
+        extend:true,
+        plateDis:true,
         //
         leaseId:NaN,
         plate:'',
@@ -48,7 +50,26 @@ export default class Lease extends React.Component{
     }
     //add new lease detail
     uploadLease=()=>{
-
+        let para={
+            leaseId:this.state.leaseId,
+            plate:this.state.plate.toUpperCase(),
+            expiry:this.state.nexpiry,
+            valid:true
+        }
+        if(!para.leaseId){
+            para.leaseId=0;
+        }
+        axios.post('/api/LeasePark/AddLease',para).then(res=>{
+           if(res.data.status){
+               this.handleClose();
+               message.success("Done!");
+               this.updateTable();
+           }else{
+               message.error(res.data.error);
+               setInterval('window.location.href="/login"',1000);
+           }
+        });
+        //axios.post('');
     }
 
     updateTable=()=>{
@@ -64,25 +85,39 @@ export default class Lease extends React.Component{
         this.setState({nexpiry:extDate});
     }
     show=(c)=>{
-        this.setState({show:true});
+        this.setState({show:true,extend:true});
         if(c===1){
             this.setState({modalTitle:'Pay the parking fees monthly'});
             this.setState({
                 leaseId:NaN,
                 plate:'',
                 expiry:new Date(),
-                nexpiry:new Date().setDate(new Date().getDate()+30),
-                valid:false
+                nexpiry:new Date(),
+                valid:false,
+                plateDis:false
             });
         }else{
             this.setState({modalTitle:'Edit'});
-            this.setState({
-                leaseId:c.leaseId,
-                plate:c.plate,
-                expiry:c.expiry,
-                nexpiry:this.setLength(1),
-                valid:c.valid
-            });
+            if(c.valid){
+                this.setState({
+                    leaseId:c.leaseId,
+                    plate:c.plate,
+                    expiry:c.expiry,
+                    nexpiry:c.expiry,
+                    valid:c.valid,
+                    plateDis:true
+                });
+            }else{
+                this.setState({
+                    leaseId:c.leaseId,
+                    plate:c.plate,
+                    expiry:new Date(),
+                    nexpiry:new Date(),
+                    valid:c.valid,
+                    plateDis:true
+                });
+            }
+
         }
     }
     //close modal
@@ -243,23 +278,23 @@ export default class Lease extends React.Component{
                     <Modal.Body>
                         <div className={"modal-rows"}>
                             <span className={'plate-title'}>Plate:</span>
-                            <Input style={{width:"228px"}} defaultValue={this.state.plate} onChange={e=>{this.setState({plate:e.target.value})}}></Input>
+                            <Input style={{width:"228px"}} defaultValue={this.state.plate} onChange={e=>{this.setState({plate:e.target.value})}} disabled={this.state.plateDis}></Input>
                         </div>
                         <div className={"modal-rows"}>
                             <span>Extend: </span>
-                            <InputNumber min={1} max={12} defaultValue={1} onChange={value=>{this.setLength(value)}} />
-                            <span>Month(s)/30 days</span>
+                            <InputNumber min={1} max={12} defaultValue={0} onChange={value=>{this.setLength(value);this.setState({extend:false})}} />
+                            <span style={{"margin-left":"5px"}}>Month(s)/30 days</span>
                         </div>
                         <div className={"modal-rows"}>
                             <span>Expiry:</span>
-                            <span>{this.getDate(this.state.nexpiry)}</span>
+                            <span style={{"margin-left":"10px"}}>{this.getDate(this.state.nexpiry)}</span>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="secondary" onClick={()=>this.handleClose()}>
                             Close
                         </Button>
-                        <Button type="primary" onClick={()=>this.uploadLease()}>Add</Button>
+                        <Button type="primary" onClick={()=>this.uploadLease()} disabled={this.state.extend}>Add</Button>
                     </Modal.Footer>
                 </Modal>
             </Layout>
