@@ -26,7 +26,7 @@ export default class History extends React.Component{
         axios.get('/api/SearchPlate/GetHistoryInfo').then(res=>{
             this.setState({loading:false});
             if(res.data.status){
-                this.state.data=this.setState({data:res.data.history});
+                this.setState({data:res.data.history});
             }else{
                 message.error(res.data.error);
                 setInterval('window.location.href="/login"',1000);

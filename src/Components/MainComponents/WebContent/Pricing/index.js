@@ -53,7 +53,8 @@ export default class Pricing extends React.Component{
         axios.get('/api/Pricing/GetAllPricing').then(res=>{
             this.setState({loading:false});
            if(res.data.status){
-               this.state.data=this.setState({data:res.data.pricings});
+               //this.state.data=this.setState({data:res.data.pricings});
+               this.setState({data:res.data.pricings});
            }else{
                message.error(res.data.error);
                setInterval('window.location.href="/login"',1000);
@@ -218,26 +219,26 @@ export default class Pricing extends React.Component{
             haveEarlyBird: this.state.haveEarlyBird,
             haveMax: this.state.haveMax,
             isMonthly:this.state.isMonthly,
-            monthlyFees:this.state.monthlyFees,
             freeBefore: this.state.freeBefore,
             inUse:this.state.inUse
         }
         if(this.state.haveEarlyBird){
-            if(this.state.earlyBirdPrice==null){
+            if(!this.state.earlyBirdPrice){
                 alert("Early Bird Price should not be empty!");
                 return;
             }
             para.earlyBirdPrice=this.state.earlyBirdPrice
         }
         if(this.state.haveMax){
-            if(this.state.monthlyFees==null){
+            if(!this.state.maxPrice){
                 alert("Max price should not be empty!");
                 return;
             }
             para.maxPrice=this.state.maxPrice
         }
         if(this.state.isMonthly){
-            if(this.state.monthlyFees==null){
+            console.log(this.state.monthlyFees);
+            if(!this.state.monthlyFees){
                 alert("Monthly Price should not be empty");
                 return;
             }
@@ -533,7 +534,7 @@ export default class Pricing extends React.Component{
                         <Button type="secondary" onClick={()=>this.handleClose()}>
                             Close
                         </Button>
-                        <Button type="primary" onClick={()=>this.submitForm()}>Add</Button>
+                        <Button type="primary" onClick={()=>this.submitForm()}>Confirm</Button>
                     </Modal.Footer>
                 </Modal>
             </Layout>

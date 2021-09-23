@@ -87,7 +87,7 @@ export default class Current extends React.Component{
         axios.get("/api/SearchPlate/GetCurrentInfo").then(res=>{
             this.setState({loading:false});
             if(res.data.status){
-                this.state.data=this.setState({data:res.data.allPlate});
+                this.setState({data:res.data.allPlate});
             }else{
                 message.error(res.data.error);
                 setInterval('window.location.href="/login"',1000);

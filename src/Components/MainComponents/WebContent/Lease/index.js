@@ -5,7 +5,6 @@ import axios from "axios";
 import {Modal} from "react-bootstrap";
 import Highlighter from "react-highlight-words";
 import './index.css';
-import {forEach} from "react-bootstrap/ElementChildren";
 const {Content } = Layout;
 
 
@@ -19,6 +18,11 @@ export default class Lease extends React.Component{
         modalTitle: '',
         extend:true,
         plateDis:true,
+        //
+        pricingId:'',
+        isMonthly:false,
+        monthlyFees:'',
+        amount:'',
         //
         leaseId:NaN,
         plate:'',
@@ -41,11 +45,23 @@ export default class Lease extends React.Component{
         axios.get('/api/LeasePark/GetAllLease').then(res=>{
            this.setState({loading:false});
            if(res.data.status){
-               this.state.data=this.setState({data:res.data.leaseLists});
+               this.setState({data:res.data.leaseLists});
+               this.getPricing();
            }else{
                message.error(res.data.error);
                setInterval('window.location.href="/login"',1000);
            }
+        });
+
+    }
+    //pricing
+    getPricing=()=>{
+        axios.get('/api/Pricing/GetPricing').then(res=>{
+           this.setState({
+               pricingId:res.data[0].pricingId,
+               isMonthly:res.data[0].isMonthly,
+               monthlyFees:res.data[0].monthlyFees,
+           });
         });
     }
     //add new lease detail
@@ -83,9 +99,12 @@ export default class Lease extends React.Component{
         let extDate=new Date(expired);
         extDate.setDate(expired.getDate()+30*value);
         this.setState({nexpiry:extDate});
+        let mfees=this.state.monthlyFees;
+        this.setState({amount:mfees*value});
     }
     show=(c)=>{
         this.setState({show:true,extend:true});
+        this.setState({amount:this.state.monthlyFees+"/month"});
         if(c===1){
             this.setState({modalTitle:'Pay the parking fees monthly'});
             this.setState({
@@ -235,11 +254,13 @@ export default class Lease extends React.Component{
                 title:'Action',
                 key:'action',
                 render:(text,record)=>{
-                    return(
-                        <Space size={"middle"}>
-                            <a style={{color:'#0d6efd'}} type={'primary'} onClick={()=>this.show(record)}>Edit</a>
-                        </Space>
-                    )
+                    if(this.state.isMonthly){
+                        return(
+                            <Space size={"middle"}>
+                                <a style={{color:'#0d6efd'}} type={'primary'} onClick={()=>this.show(record)}>Edit</a>
+                            </Space>
+                        )
+                    }
                 }
             }
         ];
@@ -259,7 +280,7 @@ export default class Lease extends React.Component{
                     }}
                 >
                     <div className={"button-set"}>
-                        <Button className={"add-car"} type={"primary"}  onClick={()=>this.show(1)}>New</Button>
+                        <Button className={"add-car"} type={"primary"}  onClick={()=>this.show(1)} disabled={!this.state.isMonthly}>New</Button>
                         <Button icon={<RedoOutlined />} onClick={()=>this.updateTable()}/>
                     </div>
                     <Spin spinning={this.state.loading}>
@@ -288,6 +309,10 @@ export default class Lease extends React.Component{
                         <div className={"modal-rows"}>
                             <span>Expiry:</span>
                             <span style={{"margin-left":"10px"}}>{this.getDate(this.state.nexpiry)}</span>
+                        </div>
+                        <div className={"modal-rows"}>
+                            <span>Amount:</span>
+                            <span>${this.state.amount}</span>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
