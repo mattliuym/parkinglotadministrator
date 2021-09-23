@@ -10,6 +10,8 @@ import 'antd/dist/antd.css';
 import {Switch, Route, Redirect} from "react-router-dom";
 import Lease from "../MainComponents/WebContent/Lease";
 import Pricing from "../MainComponents/WebContent/Pricing";
+import MyInfo from "../MainComponents/WebContent/MyInfo";
+import CarparkInfo from "../MainComponents/WebContent/CarparkInfo";
 
 
 
@@ -39,6 +41,8 @@ export default class MainPage extends React.Component{
                             <Route path={'/home/history'} component={History} />
                             <Route path={'/home/lease'} component={Lease}/>
                             <Route path={'/home/pricing'} component={Pricing}/>
+                            <Route path={'/home/myinfo'} component={MyInfo}/>
+                            <Route path={'/home/carparkinfo'} component={CarparkInfo}/>
                             <Redirect to={'/home/current'} />
                         </Switch>
                             {/*</Content>*/}

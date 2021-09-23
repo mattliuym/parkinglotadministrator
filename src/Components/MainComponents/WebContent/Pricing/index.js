@@ -308,7 +308,7 @@ export default class Pricing extends React.Component{
                     }
                 }
             },{
-                title: 'Price(hr/fix)',
+                title: 'Rates(hr/fix)',
                 dataIndex: 'pricePh',
                 key: 'pricePh',
                 render: pricePh=><span>${pricePh}</span>
@@ -325,7 +325,7 @@ export default class Pricing extends React.Component{
                     }
                 }
             },{
-                title:'Early Bird Price',
+                title:'Early Bird',
                 dataIndex: 'earlyBirdPrice',
                 key:'earlyBirdPrice',
                 render:earlyBirdPrice=>{
@@ -336,7 +336,7 @@ export default class Pricing extends React.Component{
                     }
                 }
             },{
-                title:'Maximum Price',
+                title:'Maximum Fees',
                 dataIndex: 'maxPrice',
                 key:'maxPrice',
                 render: maxPrice=>{
@@ -354,12 +354,12 @@ export default class Pricing extends React.Component{
                     if(freeBefore===0){
                         return <span>No Applicable</span>
                     }else{
-                        return <span>${freeBefore}</span>
+                        return <span>{freeBefore}min</span>
                     }
                 }
             },
             {
-                title:'Lease a park',
+                title:'Reserve a park',
                 dataIndex: 'monthlyFees',
                 key:'monthlyFees',
                 render:monthlyFees=>{
