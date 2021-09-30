@@ -82,7 +82,7 @@ export default class Lease extends React.Component{
                this.updateTable();
            }else{
                message.error(res.data.error);
-               setInterval('window.location.href="/login"',1000);
+               setTimeout('window.location.href="/login"',1000);
            }
         });
         //axios.post('');
