@@ -48,6 +48,20 @@ export default class Pricing extends React.Component{
         freeBefore:NaN,
         inUse:false
     }
+    //delete price plans
+    deletePrice=(r)=>{
+        let para={
+            pricingId:r.pricingId
+        }
+        axios.post('/api/Pricing/DeletePricing',r).then(res=>{
+           if(res.data.public){
+               message.success("Success!");
+               this.updateTable();
+           }else{
+               message.error(res.data.error);
+           }
+        })
+    }
     //get pricing info from db
     getPricing=()=>{
         axios.get('/api/Pricing/GetAllPricing').then(res=>{
@@ -210,7 +224,6 @@ export default class Pricing extends React.Component{
     //submit the pricing scheme
     submitForm=()=>{
         let para = {
-            pricingId:this.state.pricingId,
             pricingName:this.state.pricingName,
             totalPark:this.state.totalPark,
             isTwentyFour:this.state.isTwentyFour,
@@ -252,7 +265,11 @@ export default class Pricing extends React.Component{
             para.openTime=this.state.openTime;
             para.closeTime=this.state.closeTime;
         }
+        if(this.state.pricingId){
+            para.pricingId=this.state.pricingId;
+        }
         axios.post('/api/Pricing/UpdatePricing',para).then(res=>{
+            console.log(res);
             if(res.data.status){
                 if(res.data.public){
                     this.handleClose();
@@ -399,7 +416,7 @@ export default class Pricing extends React.Component{
                         return (
                             <Space size="middle">
                                 <a style={{color:'#0d6efd'}} onClick={()=>this.show(record)}>Edit</a>
-                                <Popconfirm onConfirm={()=>this.releaseCar(record)} title={"Do you confirm to move it to history?"}><a style={{color:'#0d6efd'}}>Delete</a></Popconfirm>
+                                <Popconfirm onConfirm={()=>this.deletePrice(record)} title={"Do you confirm to delete this scheme?"}><a style={{color:'#0d6efd'}}>Delete</a></Popconfirm>
                             </Space>
                         )
                     }
@@ -527,7 +544,7 @@ export default class Pricing extends React.Component{
                             <span id={'phour'}>minutes</span>
                         </div>
                         <div className={"modal-rows"}>
-                            <Checkbox defaultChecked={this.state.inUse} onChange={(e)=>{this.setState({inUse:e.target.checked});}}>Enable this scheme</Checkbox>
+                            <Checkbox disabled={this.state.inUse} defaultChecked={this.state.inUse} onChange={(e)=>{this.setState({inUse:e.target.checked});}}>Enable this scheme</Checkbox>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
