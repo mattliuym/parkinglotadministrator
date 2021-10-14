@@ -229,7 +229,7 @@ export default class Current extends React.Component{
                     //     <a>Delete</a>
                     // </Space>
                 {
-                    if(!record.isPaid){
+                    if(!record.isPaid&&record.fees!=0){
                         return (
                             <Space size="middle">
                                 <Popconfirm onConfirm={()=>this.confirm(record)} title={"Do you confirm to do so?"}><Button type={'primary'}>Make a Payment</Button></Popconfirm>

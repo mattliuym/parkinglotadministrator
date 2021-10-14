@@ -250,7 +250,7 @@ export default class Pricing extends React.Component{
             para.maxPrice=this.state.maxPrice
         }
         if(this.state.isMonthly){
-            console.log(this.state.monthlyFees);
+            // console.log(this.state.monthlyFees);
             if(!this.state.monthlyFees){
                 alert("Monthly Price should not be empty");
                 return;
@@ -269,7 +269,6 @@ export default class Pricing extends React.Component{
             para.pricingId=this.state.pricingId;
         }
         axios.post('/api/Pricing/UpdatePricing',para).then(res=>{
-            console.log(res);
             if(res.data.status){
                 if(res.data.public){
                     this.handleClose();
