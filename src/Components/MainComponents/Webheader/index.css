@@ -2,10 +2,14 @@
     color: white;
     line-height: 35px;
 }
-.logout-button{
-    left:90%;
-}
+/*.logout-button{*/
+/*    left:90%;*/
+/*}*/
 .project-title{
     color: white;
     font-size: 22px;
+}
+.logout-button{
+    float:right;
+    margin: 0px 24px 16px 0;
 }

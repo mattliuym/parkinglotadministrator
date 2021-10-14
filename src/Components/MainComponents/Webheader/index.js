@@ -46,15 +46,19 @@ export default class Webheader extends React.Component{
                 <div className="logo user-info">
                     <span>{this.state.userName}</span>
                 </div>
+                <div className={"logout-button"}>
+                    <Button  onClick={()=>this.logOut()}>Log Out</Button>
+                </div>
                 <div>
                     <span><div className={"project-title"}>Carpark Management System</div></span>
                 </div>
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-                    {/*<Menu.Item key="1">nav 1</Menu.Item>*/}
-                    {/*<Menu.Item key="2">nav 2</Menu.Item>*/}
-                    {/*<Menu.Item key="3">nav 3</Menu.Item>*/}
-                    <Menu.Item className={"logout-button"} key={"1"}><Button onClick={()=>this.logOut()}>Log Out</Button></Menu.Item>
-                </Menu>
+
+                {/*<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>*/}
+                {/*    /!*<Menu.Item key="1">nav 1</Menu.Item>*!/*/}
+                {/*    /!*<Menu.Item key="2">nav 2</Menu.Item>*!/*/}
+                {/*    /!*<Menu.Item key="3">nav 3</Menu.Item>*!/*/}
+                {/*    <Menu.Item className={"logout-button"} key={"1"}><Button onClick={()=>this.logOut()}>Log Out</Button></Menu.Item>*/}
+                {/*</Menu>*/}
             </Header>
         )
     }

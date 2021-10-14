@@ -31,8 +31,14 @@ export default class Current extends React.Component{
     }
     //
     confirm = (e)=>{
-        console.log(e);
-        message.success("Done!");
+        axios.post("/api/Transaction/ChangePayStatus",e).then(res=>{
+            if(res.data.status){
+                message.success("Done!");
+                this.updateTable();
+            }else{
+                message.error("Try again!");
+            }
+        });
     }
     //release car
     releaseCar = (record)=>{
@@ -226,7 +232,7 @@ export default class Current extends React.Component{
                     if(!record.isPaid){
                         return (
                             <Space size="middle">
-                                <Popconfirm onConfirm={()=>this.confirm(this)} title={"Do you confirm to do so?"}><Button type={'primary'}>Make a Payment</Button></Popconfirm>
+                                <Popconfirm onConfirm={()=>this.confirm(record)} title={"Do you confirm to do so?"}><Button type={'primary'}>Make a Payment</Button></Popconfirm>
                             </Space>
                         )
                     }else{
