@@ -1,6 +1,7 @@
 [comment]: <> (# Getting Started with Create React App)
 
 [comment]: <> (This project was bootstrapped with [Create React App]&#40;https://github.com/facebook/create-react-app&#41;.)
+# parkinglotadministrator
 
 This is the administrator side of my project. To enable this project, please follow the command below:
 ## Available Scripts
